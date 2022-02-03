@@ -1,3 +1,13 @@
 <template>
-  <h1 class="text-3xl font-bold underline">Hello World</h1>
+  <router-view />
 </template>
+
+<style>
+#app {
+  @apply flex flex-col h-screen;
+}
+
+body {
+  @apply font-sans bg-gray-700;
+}
+</style>
