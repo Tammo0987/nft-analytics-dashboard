@@ -15,6 +15,11 @@ const routes = [
                 component: Dashboard
             },
             {
+                path: '/collection/:chainId/:address',
+                name: 'Collection',
+                component: () => import('../pages/Collection.vue'),
+            },
+            {
                 path: '/:pathMatch(.*)',
                 component: NoRoute
             }

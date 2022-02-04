@@ -15,13 +15,13 @@
           <div class="text-sm text-white">{{ collection.name || collection.address }}</div>
         </td>
         <td class="px-6 py-4">
-          <div class="text-sm text-white">{{ asUSD(collection.marketCap) }}</div>
+          <div class="text-sm text-white">{{ useUSDFormat(collection.marketCap) }}</div>
         </td>
         <td class="px-6 py-4">
-          <div class="text-sm text-white">{{ asUSD(collection.dayVolume) }}</div>
+          <div class="text-sm text-white">{{ useUSDFormat(collection.dayVolume) }}</div>
         </td>
         <td class="px-6 py-4">
-          <div class="text-sm text-white">{{ asUSD(collection.averagePrice) }}</div>
+          <div class="text-sm text-white">{{ useUSDFormat(collection.averagePrice) }}</div>
         </td>
         <td class="px-6 py-4">
           <div class="text-sm text-white">{{ collection.transactions.toLocaleString() }}</div>
@@ -39,6 +39,7 @@
 import {computed, defineComponent, PropType, ref} from "vue";
 import {Collection} from '../api/covalent';
 import {useRouter} from "vue-router";
+import {useUSDFormat} from "../composables";
 
 export default defineComponent({
   name: "CollectionTable",
@@ -64,13 +65,6 @@ export default defineComponent({
       router.push(`/collection/${props.chain.value}/${address}`);
     }
 
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
-
-    const asUSD = (value: number) => formatter.format(value).split('.')[0];
-
     const filteredCollections = computed(() => props.collections.filter(collection => {
       if (props.query) {
         if (collection.name) {
@@ -86,8 +80,8 @@ export default defineComponent({
     return {
       columns,
       goToCollection,
-      asUSD,
-      filteredCollections
+      filteredCollections,
+      useUSDFormat
     };
   }
 });
