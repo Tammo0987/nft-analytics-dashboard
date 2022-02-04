@@ -12,7 +12,7 @@ export interface Collection {
 
 const client = axios.create({
     baseURL: 'https://api.covalenthq.com/v1/',
-    timeout: 10000,
+    timeout: 15000,
     params: {
         key: import.meta.env.VITE_COVALENT_API_KEY
     }

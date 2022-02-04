@@ -9,7 +9,7 @@
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-900">
-      <tr v-for="collection in collections" :key="collection.name" @click="goToCollection(collection.address)"
+      <tr v-for="collection in filteredCollections" :key="collection.address" @click="goToCollection(collection.address)"
           class="odd:bg-gray-800 hover:bg-gray-600 even:bg-gray-700 cursor-pointer">
         <td class="px-6 py-4">
           <div class="text-sm text-white">{{ collection.name || collection.address }}</div>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType, ref} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import {Collection} from '../api/covalent';
 import {useRouter} from "vue-router";
 
@@ -47,7 +47,13 @@ export default defineComponent({
       type: Object as PropType<Collection[]>,
       required: true
     },
-    chain: null
+    chain: {
+      type: Object,
+      required: true,
+    },
+    query: {
+      type: String
+    }
   },
   setup(props) {
     const columns = ref(['Name', 'Market Cap', '24H Volume', 'AVG Price', '# Transactions', '# Wallets']);
@@ -65,10 +71,23 @@ export default defineComponent({
 
     const asUSD = (value: number) => formatter.format(value).split('.')[0];
 
+    const filteredCollections = computed(() => props.collections.filter(collection => {
+      if (props.query) {
+        if (collection.name) {
+          return collection.name.search(props.query) !== -1;
+        } else {
+          return collection.address.search(props.query) !== -1;
+        }
+      } else {
+        return true;
+      }
+    }));
+
     return {
       columns,
       goToCollection,
-      asUSD
+      asUSD,
+      filteredCollections
     };
   }
 });
