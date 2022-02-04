@@ -52,18 +52,21 @@ const client = axios.create({
 });
 
 export async function getCollections(chain: number): Promise<Collection[]> {
-    return client.get(`/${chain}/nft_market/`)
-        .then(response => response.data.data.items.map(mapItemToCollection));
+    const response = await client.get(`/${chain}/nft_market/`)
+    return response.data.data.items.map(mapItemToCollection);
 }
 
 export async function getCollection(chain: number, address: string): Promise<Collection> {
     const yesterday = getYesterday();
-    return client.get(`/${chain}/nft_market/collection/${address}/`, {
+    const requestConfig = {
         params: {
             from: yesterday,
-            to: yesterday
         }
-    }).then(response => mapItemToCollection(response.data.data.items[0]));
+    };
+
+    const response = await client.get(`/${chain}/nft_market/collection/${address}/`, requestConfig);
+
+    return mapItemToCollection(response.data.data.items[0]);
 }
 
 export async function getTokenIdByCollectionAddress(chain: number, address: string): Promise<TokenId[]> {
@@ -72,8 +75,8 @@ export async function getTokenIdByCollectionAddress(chain: number, address: stri
 }
 
 export async function getImageURLByTokenId(chain: number, address: string, token: TokenId): Promise<ImageURL> {
-    return client.get(`/${chain}/tokens/${address}/nft_metadata/${token}/`)
-        .then(response => response.data.data.items[0].nft_data[0].external_data.image);
+    const response = await client.get(`/${chain}/tokens/${address}/nft_metadata/${token}/`)
+    return response.data.data.items[0].nft_data[0].external_data.image;
 }
 
 export async function getCollectionPreviewImageURL(chain: number, address: string): Promise<ImageURL> {
@@ -83,7 +86,7 @@ export async function getCollectionPreviewImageURL(chain: number, address: strin
         }
     };
 
-    return client.get(`/${chain}/tokens/${address}/nft_token_ids/`, requestConfig)
-        .then(response => response.data.data.items.map((item: any) => item.token_id))
-        .then(async tokenId => await getImageURLByTokenId(chain, address, tokenId));
+    const response = await client.get(`/${chain}/tokens/${address}/nft_token_ids/`, requestConfig);
+    const tokenId = response.data.data.items.map((item: any) => item.token_id)[0];
+    return await getImageURLByTokenId(chain, address, tokenId);
 }

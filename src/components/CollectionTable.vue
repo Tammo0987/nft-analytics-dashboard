@@ -40,6 +40,7 @@ import {computed, defineComponent, PropType, ref} from "vue";
 import {Collection} from '../api/covalent';
 import {useRouter} from "vue-router";
 import {useUSDFormat} from "../composables";
+import useChainStore from "../store/store";
 
 export default defineComponent({
   name: "CollectionTable",
@@ -47,10 +48,6 @@ export default defineComponent({
     collections: {
       type: Object as PropType<Collection[]>,
       required: true
-    },
-    chain: {
-      type: Object,
-      required: true,
     },
     query: {
       type: String
@@ -61,8 +58,10 @@ export default defineComponent({
 
     const router = useRouter();
 
+    const chain = useChainStore().selectedChain
+
     function goToCollection(address: string) {
-      router.push(`/collection/${props.chain.value}/${address}`);
+      router.push(`/collection/${chain.id}/${address}`);
     }
 
     const filteredCollections = computed(() => props.collections.filter(collection => {

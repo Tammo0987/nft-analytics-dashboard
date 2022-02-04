@@ -2,7 +2,9 @@
   <div class="m-4 bg-gray-700 rounded shadow-lg flex flex-row text-white">
     <div class="m-4">
       <img v-if="imageSource" :src="imageSource" class="m-2 w-64 h-64"/>
-      <spinner v-else class="w-64 h-64"/>
+      <div v-else class="w-64 h-64 flex justify-center items-center">
+        <spinner  />
+      </div>
     </div>
     <div class="flex flex-col justify-between m-6">
       <div class="mt-2">
