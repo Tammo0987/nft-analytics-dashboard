@@ -1,6 +1,8 @@
 <template>
   <navbar />
-  <router-view />
+  <div class="w-4/5 self-center flex flex-col flex-grow">
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
