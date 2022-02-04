@@ -6,7 +6,8 @@ export interface Collection {
     dayVolume: number,
     averagePrice: number,
     transactions: number,
-    wallets: number
+    wallets: number,
+    address: string
 }
 
 const client = axios.create({
@@ -27,7 +28,8 @@ export async function getCollections(chain: number): Promise<Collection[]> {
                 dayVolume: collection.volume_quote_24h,
                 averagePrice: collection.avg_volume_quote_24h,
                 transactions: collection.transaction_count_alltime,
-                wallets: collection.unique_wallet_purchase_count_alltime
+                wallets: collection.unique_wallet_purchase_count_alltime,
+                address: collection.collection_address
             };
         }));
     } catch (e: unknown) {

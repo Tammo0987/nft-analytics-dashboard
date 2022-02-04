@@ -1,9 +1,13 @@
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between items-center">
     <h1 class="text-white font-bold text-2xl my-8">NFT Collections</h1>
     <dropdown v-model="chain" :options="chains" class="my-8" @change="loadCollections"/>
   </div>
-  <collection-table :collections="collections"/>
+
+  <collection-table v-if="collections.length" :collections="collections" :chain="chain"/>
+  <div v-else class="flex justify-center items-center absolute top-0 left-0 w-screen h-screen">
+    <spinner class=""/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,10 +15,11 @@ import {defineComponent, Ref, ref} from "vue";
 import CollectionTable from "../components/CollectionTable.vue";
 import Dropdown from "../components/Dropdown.vue";
 import {Collection, getCollections} from "../api/covalent";
+import Spinner from "../components/Spinner.vue";
 
 export default defineComponent({
   name: "Dashboard",
-  components: {CollectionTable, Dropdown},
+  components: {Spinner, CollectionTable, Dropdown},
   setup() {
     const chains = [
       {label: "Ethereum", value: 1},

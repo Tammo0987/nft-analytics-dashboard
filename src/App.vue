@@ -8,6 +8,6 @@
 }
 
 body {
-  @apply font-sans bg-gray-700;
+  @apply font-sans bg-gray-600;
 }
 </style>

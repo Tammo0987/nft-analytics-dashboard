@@ -1,36 +1,38 @@
 <template>
-  <table class="min-w-full divide-y divide-gray-200 shadow rounded">
-    <thead class="bg-gray-50">
-    <tr>
-      <th v-for="column in columns" :key="column"
-          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ column }}
-      </th>
-    </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200 ">
-    <tr v-for="collection in collections" :key="collection.name" @click="goToCollection(collection.name)"
-        class="bg-white hover:bg-gray-100 cursor-pointer">
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.name }}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.marketCap }}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.dayVolume }}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.averagePrice }}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.transactions }}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="text-sm text-gray-500">{{ collection.wallets }}</div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="rounded overflow-auto mb-4 shadow-lg">
+    <table class="min-w-full divide-y divide-gray-900">
+      <thead class="bg-gray-900">
+      <tr>
+        <th v-for="column in columns" :key="column"
+            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">{{ column }}
+        </th>
+      </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-900">
+      <tr v-for="collection in collections" :key="collection.name" @click="goToCollection(collection.address)"
+          class="odd:bg-gray-800 hover:bg-gray-600 even:bg-gray-700 cursor-pointer">
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ collection.name || collection.address }}</div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ asUSD(collection.marketCap) }}</div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ asUSD(collection.dayVolume) }}</div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ asUSD(collection.averagePrice) }}</div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ collection.transactions.toLocaleString() }}</div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="text-sm text-white">{{ collection.wallets.toLocaleString() }}</div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
@@ -45,19 +47,28 @@ export default defineComponent({
       type: Object as PropType<Collection[]>,
       required: true
     },
+    chain: null
   },
-  setup() {
+  setup(props) {
     const columns = ref(['Name', 'Market Cap', '24H Volume', 'AVG Price', '# Transactions', '# Wallets']);
 
     const router = useRouter();
 
-    function goToCollection(name: string) {
-      router.push(`/collection/${name}`);
+    function goToCollection(address: string) {
+      router.push(`/collection/${props.chain.value}/${address}`);
     }
+
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+    const asUSD = (value: number) => formatter.format(value).split('.')[0];
 
     return {
       columns,
-      goToCollection
+      goToCollection,
+      asUSD
     };
   }
 });

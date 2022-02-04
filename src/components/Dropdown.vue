@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative" @focusout="open = false" tabindex="0">
     <div @click="open = !open"
          class="bg-gray-900 text-white text-lg rounded drop-shadow-lg p-4 flex flex-row cursor-pointer">
       <span> {{ modelValue.label }} </span>
