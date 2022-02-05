@@ -9,8 +9,10 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "axios": "^0.25.0",
+    "chart.js": "^3.7.0",
     "pinia": "^2.0.11",
     "vue": "^3.2.25",
+    "vue-chart-3": "^3.0.9",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {

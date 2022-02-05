@@ -12,11 +12,17 @@ export interface Collection {
     soldToday: number,
 }
 
+export interface CollectionPrice {
+    date: number,
+    floorPriceUSD: number,
+    floorPriceWei: number,
+}
+
 export type TokenId = string
 
 export type ImageURL = string
 
-function mapItemToCollection(item: any) {
+function mapItemToCollection(item: any): Collection {
     return {
         name: item.collection_name,
         marketCap: item.market_cap_quote,
@@ -30,12 +36,20 @@ function mapItemToCollection(item: any) {
     }
 }
 
+function mapItemToCollectionPrice(item: any): CollectionPrice {
+    return {
+        date: item.opening_date,
+        floorPriceUSD: item.floor_price_quote_7d,
+        floorPriceWei: item.floor_price_wei_7d
+    }
+}
+
 function padTo2Digits(number: number) {
     return number.toString().padStart(2, '0');
 }
 
-function getYesterday() {
-    const yesterday = new Date(Date.now() - 86400000);
+function getPastDay(distance: number): string {
+    const yesterday = new Date(Date.now() - 86400000 * distance);
     return [
         yesterday.getFullYear(),
         padTo2Digits(yesterday.getMonth() + 1),
@@ -57,7 +71,7 @@ export async function getCollections(chain: number): Promise<Collection[]> {
 }
 
 export async function getCollection(chain: number, address: string): Promise<Collection> {
-    const yesterday = getYesterday();
+    const yesterday = getPastDay(2);
     const requestConfig = {
         params: {
             from: yesterday,
@@ -89,4 +103,19 @@ export async function getCollectionPreviewImageURL(chain: number, address: strin
     const response = await client.get(`/${chain}/tokens/${address}/nft_token_ids/`, requestConfig);
     const tokenId = response.data.data.items.map((item: any) => item.token_id)[0];
     return await getImageURLByTokenId(chain, address, tokenId);
+}
+
+export async function getCollectionHistoryData(chain: number, address: string): Promise<CollectionPrice[]> {
+    const today = getPastDay(0);
+    const weekAgo = getPastDay(30);
+    const requestConfig = {
+        params: {
+            from: weekAgo,
+            to: today
+        }
+    }
+
+    const response = await client.get(`/${chain}/nft_market/collection/${address}/`, requestConfig);
+
+    return response.data.data.items.map(mapItemToCollectionPrice);
 }
