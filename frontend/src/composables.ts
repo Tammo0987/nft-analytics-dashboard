@@ -16,16 +16,21 @@ export const useWeb3Provider = () => {
     ethereum.on('chainChanged', () => window.location.reload())
 
     return new ethers.providers.Web3Provider(ethereum, 'any');
-}
+};
 
 export const isMetaMaskConnected = async () => {
     const provider = useWeb3Provider();
     const accounts = await provider.listAccounts();
     return accounts.length > 0;
-}
+};
 
 export const useSigner = () => {
     return useWeb3Provider().getSigner();
-}
+};
+
+export const useLoggedInNetworkChainId = async () => {
+    const {chainId} = await useWeb3Provider().getNetwork();
+    return chainId;
+};
 
 export const zeroAddress = '0x0000000000000000000000000000000000000000';

@@ -7,7 +7,7 @@
       </router-link>
     </div>
     <div>
-
+      TODO
     </div>
   </div>
 </template>
@@ -35,6 +35,8 @@ export default defineComponent({
         .then((events: any) => events.map((event: any) => parseInt(event.args[2]._hex)))
         .then(async tokenIds => await Promise.all(tokenIds.map(async (tokenId: any) => await tokenContract.tokenURI(tokenId))))
         .catch((error: any) => console.error(error));
+
+    // TODO use covalent api to get nft metadata
 
     return {};
   },

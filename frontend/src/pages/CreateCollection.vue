@@ -22,13 +22,16 @@ import DashboardButton from "../components/DashboardButton.vue";
 import {useSigner, useWeb3Provider} from "../composables";
 import {createNFTCollectionContract} from "../api/nft-collection";
 import {ethers} from "ethers";
-import {chains} from "../store/chain-store";
+import {testNetChains} from "../store/chain-store";
 import useCollectionStore from "../store/collection-store";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: "CreateCollection",
   components: {DashboardButton},
   setup() {
+    const router = useRouter();
+
     const metadataTemplate = {
       name: '',
       contractName: '',
@@ -45,7 +48,7 @@ export default defineComponent({
           const response = await factory.deploy();
           const contractAddress = response.address;
           useCollectionStore().addCollectionAddress(contractAddress);
-          metadata.value = metadataTemplate;
+          await router.push(`/wallet`)
         } catch (error: any) {
           console.error(error);
         }
@@ -66,7 +69,7 @@ export default defineComponent({
     useWeb3Provider()
         .getNetwork()
         .then(response => {
-          networkName.value = chains.find(value => value.id === response.chainId)?.name || '';
+          networkName.value = testNetChains.find(value => value.id === response.chainId)?.name || '';
         });
 
     return {

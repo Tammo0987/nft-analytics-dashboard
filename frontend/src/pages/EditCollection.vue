@@ -1,5 +1,5 @@
 <template>
-  <collection-overview :collection="collection" />
+  <collection-overview :collection="collection" :address="collection.address"/>
   <nft-collection :address="collection.address"/>
 </template>
 
@@ -10,9 +10,8 @@ import {ethers} from "ethers";
 import erc721 from '../assets/ERC721.json';
 import {useRoute} from "vue-router";
 import CollectionOverview from "../components/collection/CollectionOverview.vue";
-import {Collection, getNFTsByAddress} from "../api/covalent";
+import {Collection} from "../api/covalent";
 import NftCollection from "../components/NftCollection.vue";
-import useChainStore from "../store/chain-store";
 
 export default defineComponent({
   name: "EditCollection",
@@ -44,17 +43,16 @@ export default defineComponent({
     });
 
     // TODO move to which NFTs do I own?
-    const nfts = ref();
-
-    getNFTsByAddress(useChainStore().selectedChain.id, '0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de')
-        .then(items => nfts.value = items)
-        .catch((error: any) => console.error(error));
+    // const nfts = ref();
+    //
+    // getNFTsByAddress(useChainStore().selectedChain.id, '0xfC43f5F9dd45258b3AFf31Bdbe6561D97e8B71de')
+    //     .then(items => nfts.value = items)
+    //     .catch((error: any) => console.error(error));
 
     return {
       name,
       ticker,
       collection,
-      nfts
     }
   },
 });

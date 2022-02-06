@@ -13,8 +13,19 @@ export const chains: Chain[] = [
     {
         name: "Ethereum",
         id: 1
-    },
+    }
 ];
+
+export const testNetChains: Chain[] = chains.concat([
+    {
+        name: 'Mumbai',
+        id: 80001,
+    },
+    {
+        name: 'Kovan',
+        id: 42
+    }
+]);
 
 const useChainStore = defineStore('chain', {
     state: () => {

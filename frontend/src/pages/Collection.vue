@@ -1,6 +1,6 @@
 <template>
   <div v-if="Object.keys(collection).length">
-    <collection-overview :collection="collection"/>
+    <collection-overview :collection="collection" :chain-id="chain" :address="address"/>
     <floor-price-chart :chain="chain" :address="address"/>
   </div>
 

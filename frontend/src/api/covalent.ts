@@ -1,21 +1,18 @@
 import axios from "axios";
 
-export interface Collection {
+export interface CollectionMetadata {
     name: string,
+    ticker: string,
+    address: string
+}
+
+export interface Collection extends CollectionMetadata {
     marketCap: number,
     dayVolume: number,
     averagePrice: number,
     transactions: number,
     wallets: number,
-    address: string,
-    ticker: string,
     soldToday: number,
-}
-
-export interface CollectionMetadata {
-    name: string,
-    ticker: string,
-    address: string
 }
 
 export interface CollectionPrice {
@@ -89,11 +86,6 @@ export async function getCollection(chain: number, address: string): Promise<Col
     return mapItemToCollection(response.data.data.items[0]);
 }
 
-export async function getTokenIdByCollectionAddress(chain: number, address: string): Promise<TokenId[]> {
-    return client.get(`/${chain}/tokens/${address}/nft_token_ids/`)
-        .then(response => response.data.data.items.map((item: any) => item.token_id));
-}
-
 export async function getImageURLByTokenId(chain: number, address: string, token: TokenId): Promise<ImageURL> {
     const response = await client.get(`/${chain}/tokens/${address}/nft_metadata/${token}/`)
     return response.data.data.items[0].nft_data[0].external_data.image;
@@ -108,6 +100,11 @@ export async function getCollectionPreviewImageURL(chain: number, address: strin
 
     const response = await client.get(`/${chain}/tokens/${address}/nft_token_ids/`, requestConfig);
     const tokenId = response.data.data.items.map((item: any) => item.token_id)[0];
+
+    if (!tokenId) {
+        throw Error('No token id available!')
+    }
+
     return await getImageURLByTokenId(chain, address, tokenId);
 }
 
@@ -126,6 +123,7 @@ export async function getCollectionHistoryData(chain: number, address: string): 
     return response.data.data.items.map(mapItemToCollectionPrice);
 }
 
+// NFTs which the user owns
 export async function getNFTsByAddress(chain: number, address: string): Promise<any> {
     const match = {
         type: 'nft',

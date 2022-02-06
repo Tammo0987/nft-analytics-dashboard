@@ -11,7 +11,10 @@
     </div>
   </div>
   <div>
-    <div class="rounded overflow-auto mb-4 shadow-lg">
+    <div v-if="!collections.length" class="my-4 bg-gray-700 rounded shadow-lg flex flex-row justify-between text-white text-xl p-4">
+      You have no Collections available.
+    </div>
+    <div v-else class="rounded overflow-auto mb-4 shadow-lg">
       <table class="min-w-full divide-y divide-gray-900">
         <thead class="bg-gray-900">
         <tr>

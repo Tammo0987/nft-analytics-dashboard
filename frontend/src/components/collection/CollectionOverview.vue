@@ -1,10 +1,13 @@
 <template>
   <div class="my-4 bg-gray-700 rounded shadow-lg flex flex-row text-white">
     <div class="m-4">
-      <img v-if="imageSource" :src="imageSource" class="m-2 w-64 h-64"/>
-      <div v-else class="w-64 h-64 flex justify-center items-center">
-        <spinner  />
+      <div v-if="imageLoading" class="w-64 h-64 flex justify-center items-center">
+        <spinner/>
       </div>
+      <div v-else-if="imageSource === 'N/A'" class="m-2 w-64 h-64 flex justify-center items-center text-xl text-red-500">
+        No Preview
+      </div>
+      <img v-else :src="imageSource" class="m-2 w-64 h-64"/>
     </div>
     <div class="flex flex-col justify-between m-6">
       <div class="mt-2">
@@ -52,8 +55,7 @@
 <script lang="ts">
 import {defineComponent, PropType, Ref, ref} from "vue";
 import {Collection, getCollectionPreviewImageURL, ImageURL} from "../../api/covalent";
-import {useUSDFormat} from "../../composables";
-import {useRoute} from "vue-router";
+import {useLoggedInNetworkChainId, useUSDFormat} from "../../composables";
 import Spinner from "../Spinner.vue";
 
 export default defineComponent({
@@ -64,17 +66,37 @@ export default defineComponent({
       type: Object as PropType<Collection>,
       required: true
     },
+    chainId: {
+      type: Number,
+    },
+    address: {
+      type: String,
+      required: true
+    }
   },
-  setup() {
-    const route = useRoute();
-    const chainId = Number(route.params.chainId);
-    const address = route.params.address as string;
-
+  setup: function ({chainId, address}) {
+    const imageLoading = ref(true);
     const imageSource: Ref<ImageURL> = ref('')
 
-    if (chainId && address) {
-      getCollectionPreviewImageURL(chainId, address)
-          .then(imageURL => imageSource.value = imageURL);
+    if (address) {
+      const getChainId = async () => {
+        if (chainId) {
+          return chainId;
+        } else {
+          return await useLoggedInNetworkChainId();
+        }
+      };
+
+      getChainId()
+          .then(async chainId => await getCollectionPreviewImageURL(chainId, address))
+          .then(imageURL => imageSource.value = imageURL)
+          .catch((error: any) => {
+            if (error.message === 'No token id available!') {
+              imageSource.value = 'N/A';
+            } else {
+              console.error(error);
+            }
+          }).finally(() => imageLoading.value = false);
     }
 
     const goToScanSite = () => {
@@ -85,6 +107,7 @@ export default defineComponent({
 
     return {
       imageSource,
+      imageLoading,
       goToScanSite,
       useUSDFormat
     }
