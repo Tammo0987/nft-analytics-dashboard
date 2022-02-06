@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody class="divide-y divide-gray-900">
-      <tr v-for="collection in collectionToView" :key="collection.address"
+      <tr v-for="collection in filteredAndSortedCollections" :key="collection.address"
           @click="goToCollection(collection.address)"
           class="odd:bg-gray-800 hover:bg-gray-600 even:bg-gray-700 cursor-pointer">
         <td class="px-6 py-4">
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType, Ref, ref} from "vue";
+import {computed, defineComponent, PropType, ref} from "vue";
 import {Collection} from '../api/covalent';
 import {useRouter} from "vue-router";
 import {useUSDFormat} from "../composables";
@@ -101,8 +101,6 @@ export default defineComponent({
       }
 
       sort.value = {key, direction}
-
-      filterAndSort();
     };
 
     const router = useRouter();
@@ -112,9 +110,7 @@ export default defineComponent({
       router.push(`/collection/${chain.id}/${address}`);
     }
 
-    const collectionToView: Ref<Collection[]> = ref([]);
-
-    const filterAndSort = () => {
+    const filteredAndSortedCollections = computed(() => {
       const collection = props.collections.filter(collection => {
         if (props.query) {
           if (collection.name) {
@@ -125,11 +121,11 @@ export default defineComponent({
         } else {
           return true;
         }
-      })
+      });
 
       const {key, direction} = sort.value;
 
-      collectionToView.value = collection.sort((a, b) => {
+      return collection.sort((a, b) => {
         if ((a as any)[key] < (b as any)[key]) {
           return direction === 'ascending' ? -1 : 1
         }
@@ -140,22 +136,15 @@ export default defineComponent({
 
         return 0;
       });
-    };
-
-    const getIconClass = computed(() => {
-      return 'fa ' + (sort.value.direction === 'ascending' ? 'fa-arrow-up' : 'fa-arrow-down');
     });
-
-    filterAndSort();
 
     return {
       columns,
       goToCollection,
-      collectionToView,
       useUSDFormat,
       sort,
       sortTable,
-      getIconClass
+      filteredAndSortedCollections
     };
   }
 });

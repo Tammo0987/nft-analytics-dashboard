@@ -4,7 +4,8 @@
       <div v-if="imageLoading" class="w-64 h-64 flex justify-center items-center">
         <spinner/>
       </div>
-      <div v-else-if="imageSource === 'N/A'" class="m-2 w-64 h-64 flex justify-center items-center text-xl text-red-500">
+      <div v-else-if="imageSource === 'N/A'"
+           class="m-2 w-64 h-64 flex justify-center items-center text-xl text-red-500">
         No Preview
       </div>
       <img v-else :src="imageSource" class="m-2 w-64 h-64"/>
@@ -57,6 +58,7 @@ import {defineComponent, PropType, Ref, ref} from "vue";
 import {Collection, getCollectionPreviewImageURL, ImageURL} from "../../api/covalent";
 import {useLoggedInNetworkChainId, useUSDFormat} from "../../composables";
 import Spinner from "../Spinner.vue";
+import {getScanBaseURLByChainId} from "../../store/chain-store";
 
 export default defineComponent({
   name: "CollectionOverview",
@@ -78,15 +80,15 @@ export default defineComponent({
     const imageLoading = ref(true);
     const imageSource: Ref<ImageURL> = ref('')
 
-    if (address) {
-      const getChainId = async () => {
-        if (chainId) {
-          return chainId;
-        } else {
-          return await useLoggedInNetworkChainId();
-        }
-      };
+    const getChainId = async () => {
+      if (chainId) {
+        return chainId;
+      } else {
+        return await useLoggedInNetworkChainId();
+      }
+    };
 
+    if (address) {
       getChainId()
           .then(async chainId => await getCollectionPreviewImageURL(chainId, address))
           .then(imageURL => imageSource.value = imageURL)
@@ -99,8 +101,8 @@ export default defineComponent({
           }).finally(() => imageLoading.value = false);
     }
 
-    const goToScanSite = () => {
-      const baseUrl = chainId == 1 ? 'https://etherscan.io' : 'https://polygonscan.com';
+    const goToScanSite = async () => {
+      const baseUrl = getScanBaseURLByChainId(await getChainId());
 
       window.open(`${baseUrl}/address/${address}`, "_blank");
     };

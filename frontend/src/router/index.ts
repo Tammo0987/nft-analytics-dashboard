@@ -22,7 +22,7 @@ const routes = [
             },
             {
                 path: '/manager',
-                name: 'Wallet',
+                name: 'Manager',
                 component: () => import('../pages/Manager.vue'),
                 beforeEnter: checkIfUserIsSignedIn,
             },
