@@ -25,6 +25,14 @@ export type TokenId = string
 
 export type ImageURL = string
 
+export interface NFTMetadata {
+    tokenId: TokenId,
+    imageUrl: ImageURL,
+    name: string,
+    description: string,
+    owner: string
+}
+
 function mapItemToCollection(item: any): Collection {
     return {
         name: item.collection_name,
@@ -88,7 +96,7 @@ export async function getCollection(chain: number, address: string): Promise<Col
 
 export async function getImageURLByTokenId(chain: number, address: string, token: TokenId): Promise<ImageURL> {
     const response = await client.get(`/${chain}/tokens/${address}/nft_metadata/${token}/`)
-    return response.data.data.items[0].nft_data[0].external_data.image;
+    return response.data.data.items[0].nft_data[0].external_data.image_256;
 }
 
 export async function getCollectionPreviewImageURL(chain: number, address: string): Promise<ImageURL> {
@@ -122,6 +130,29 @@ export async function getCollectionHistoryData(chain: number, address: string): 
 
     return response.data.data.items.map(mapItemToCollectionPrice);
 }
+
+
+export async function getNFTMetadataByCollectionAddress(chain: number, address: string): Promise<NFTMetadata[]> {
+    // TODO currently not all loaded due to pagination!
+    const response = await client.get(`/${chain}/tokens/${address}/nft_token_ids/`);
+    const tokenIds = response.data.data.items.map((item: any) => item.token_id);
+
+    return Promise.all(tokenIds.map(async (tokenId: TokenId) => await loadNFTMetadata(chain, address, tokenId)));
+}
+
+export async function loadNFTMetadata(chain: number, address: string, tokenId: TokenId): Promise<NFTMetadata> {
+    const response = await client.get(`/${chain}/tokens/${address}/nft_metadata/${tokenId}/`);
+    const nft = response.data.data.items[0].nft_data[0];
+
+    return {
+        tokenId,
+        imageUrl: nft.external_data.image_256,
+        name: nft.external_data.name,
+        description: nft.external_data.description,
+        owner: nft.owner
+    }
+}
+
 
 // NFTs which the user owns
 export async function getNFTsByAddress(chain: number, address: string): Promise<any> {
