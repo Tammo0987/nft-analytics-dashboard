@@ -20,7 +20,7 @@ const useChainStore = defineStore('chain', {
     state: () => {
         return {
             selectedChain: chains[0],
-        };
+        }
     }
 });
 

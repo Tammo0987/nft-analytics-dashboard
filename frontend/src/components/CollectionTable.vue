@@ -40,7 +40,7 @@ import {computed, defineComponent, PropType, ref} from "vue";
 import {Collection} from '../api/covalent';
 import {useRouter} from "vue-router";
 import {useUSDFormat} from "../composables";
-import useChainStore from "../store/store";
+import useChainStore from "../store/chain-store";
 
 export default defineComponent({
   name: "CollectionTable",

@@ -5,7 +5,7 @@ const app = express();
 const port = 5000;
 
 app.get('/generate', (req, res) => {
-    const metadata = req.query.metadata;
+    const metadata = JSON.parse(req.query.metadata);
     const compiledContract = generate(metadata);
     res.json(compiledContract);
 });

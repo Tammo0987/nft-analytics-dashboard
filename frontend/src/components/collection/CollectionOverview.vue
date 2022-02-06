@@ -1,5 +1,5 @@
 <template>
-  <div class=" my-4 bg-gray-700 rounded shadow-lg flex flex-row text-white">
+  <div class="my-4 bg-gray-700 rounded shadow-lg flex flex-row text-white">
     <div class="m-4">
       <img v-if="imageSource" :src="imageSource" class="m-2 w-64 h-64"/>
       <div v-else class="w-64 h-64 flex justify-center items-center">
@@ -63,7 +63,7 @@ export default defineComponent({
     collection: {
       type: Object as PropType<Collection>,
       required: true
-    }
+    },
   },
   setup() {
     const route = useRoute();
@@ -72,8 +72,10 @@ export default defineComponent({
 
     const imageSource: Ref<ImageURL> = ref('')
 
-    getCollectionPreviewImageURL(chainId, address)
-        .then(imageURL => imageSource.value = imageURL);
+    if (chainId && address) {
+      getCollectionPreviewImageURL(chainId, address)
+          .then(imageURL => imageSource.value = imageURL);
+    }
 
     const goToScanSite = () => {
       const baseUrl = chainId == 1 ? 'https://etherscan.io' : 'https://polygonscan.com';

@@ -12,6 +12,12 @@ export interface Collection {
     soldToday: number,
 }
 
+export interface CollectionMetadata {
+    name: string,
+    ticker: string,
+    address: string
+}
+
 export interface CollectionPrice {
     date: number,
     floorPriceUSD: number,
@@ -118,4 +124,24 @@ export async function getCollectionHistoryData(chain: number, address: string): 
     const response = await client.get(`/${chain}/nft_market/collection/${address}/`, requestConfig);
 
     return response.data.data.items.map(mapItemToCollectionPrice);
+}
+
+export async function getNFTsByAddress(chain: number, address: string): Promise<any> {
+    const match = {
+        type: 'nft',
+        balance: {
+            "$gt": 0
+        }
+    };
+
+    const requestConfig = {
+        params: {
+            nft: true,
+            match
+        }
+    }
+
+    const response = await client.get(`/${chain}/address/${address}/balances_v2/`, requestConfig);
+
+    return response.data.data.items;
 }

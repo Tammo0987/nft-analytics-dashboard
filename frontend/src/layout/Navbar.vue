@@ -20,8 +20,8 @@ export default defineComponent({
         link: '/dashboard'
       },
       {
-        label: 'Market Cap',
-        link: '/market-cap'
+        label: 'NFT Manager',
+        link: '/manager'
       },
       {
         label: 'NFT Wallet',

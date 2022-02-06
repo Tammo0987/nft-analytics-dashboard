@@ -3,7 +3,7 @@ import solc from 'solc';
 import * as fs from "fs";
 
 export default function generate(metadata) {
-    const contractTemplate = fs.readFileSync('templates/template.mustache', 'utf8').toString();
+    const contractTemplate = fs.readFileSync('templates/template.sol', 'utf8').toString();
 
     // Render with mustache
     const contract = Mustache.render(contractTemplate, metadata);

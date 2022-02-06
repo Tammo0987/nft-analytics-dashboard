@@ -19,7 +19,7 @@ import CollectionTable from "../components/CollectionTable.vue";
 import Dropdown from "../components/Dropdown.vue";
 import {Collection, getCollections} from "../api/covalent";
 import Spinner from "../components/Spinner.vue";
-import useChainStore, {Chain, chains} from "../store/store";
+import useChainStore, {Chain, chains} from "../store/chain-store";
 
 export default defineComponent({
   name: "Dashboard",
