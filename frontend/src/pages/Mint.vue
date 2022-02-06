@@ -74,7 +74,7 @@ export default defineComponent({
 
       contract.mintNFT(address, storedMetadata.url)
           .then(() => {
-            router.push(`/wallet/collection/${address}`);
+            router.push(`/manager/collection/${address}`);
           })
           .catch((error: any) => console.error(error));
     };

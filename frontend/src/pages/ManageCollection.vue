@@ -14,7 +14,7 @@ import {Collection} from "../api/covalent";
 import NftCollection from "../components/NftCollection.vue";
 
 export default defineComponent({
-  name: "EditCollection",
+  name: "ManageCollection",
   components: {NftCollection, CollectionOverview},
   setup() {
     const name = ref('');

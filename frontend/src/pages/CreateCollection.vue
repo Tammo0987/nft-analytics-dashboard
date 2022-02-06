@@ -48,7 +48,7 @@ export default defineComponent({
           const response = await factory.deploy();
           const contractAddress = response.address;
           useCollectionStore().addCollectionAddress(contractAddress);
-          await router.push(`/wallet`)
+          await router.push(`/manager`)
         } catch (error: any) {
           console.error(error);
         }

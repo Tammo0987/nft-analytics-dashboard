@@ -2,7 +2,7 @@
   <div class="my-4 bg-gray-700 rounded shadow-lg text-white">
     <div class="flex flex-row items-center justify-between">
       <h1 class="text-2xl m-4">NFTs</h1>
-      <router-link :to="`/wallet/collection/${address}/mint`">
+      <router-link :to="`/manager/collection/${address}/mint`">
         <dashboard-button label="Mint NFT"/>
       </router-link>
     </div>

@@ -12,7 +12,7 @@ import {isMetaMaskConnected, useWeb3Provider} from "../composables";
 import {useRoute, useRouter} from "vue-router";
 
 export default defineComponent({
-  name: "WalletSignin",
+  name: "Signin",
   components: {DashboardButton},
   setup() {
     const router = useRouter();

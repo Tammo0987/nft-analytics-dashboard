@@ -5,7 +5,7 @@
       <div class="mt-4">Logged in as: {{ address }}</div>
     </div>
     <div>
-      <router-link to="/wallet/new-collection">
+      <router-link to="/manager/new-collection">
         <dashboard-button label="Create NFT Collection"/>
       </router-link>
     </div>
@@ -36,7 +36,7 @@
             <div class="text-sm text-white">{{ collection.address }}</div>
           </td>
           <td class="px-6 py-4">
-            <router-link :to="`/wallet/collection/${collection.address}`">
+            <router-link :to="`/manager/collection/${collection.address}`">
               <dashboard-button label="Manage" class="my-1 ml-0"/>
             </router-link>
           </td>
@@ -57,7 +57,7 @@ import erc721 from '../assets/ERC721.json';
 import {CollectionMetadata} from "../api/covalent";
 
 export default defineComponent({
-  name: "Wallet",
+  name: "Manager",
   components: {DashboardButton},
   setup: function () {
     const signer = useSigner();

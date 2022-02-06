@@ -21,25 +21,25 @@ const routes = [
                 component: () => import('../pages/Collection.vue'),
             },
             {
-                path: '/wallet',
+                path: '/manager',
                 name: 'Wallet',
-                component: () => import('../pages/Wallet.vue'),
+                component: () => import('../pages/Manager.vue'),
                 beforeEnter: checkIfUserIsSignedIn,
             },
             {
-                path: '/wallet/new-collection',
+                path: '/manager/new-collection',
                 name: 'Create Collection',
                 component: () => import('../pages/CreateCollection.vue'),
                 beforeEnter: checkIfUserIsSignedIn
             },
             {
-                path: '/wallet/collection/:address',
+                path: '/manager/collection/:address',
                 name: 'Edit Collection',
-                component: () => import('../pages/EditCollection.vue'),
+                component: () => import('../pages/ManageCollection.vue'),
                 beforeEnter: checkIfUserIsSignedIn
             },
             {
-                path: '/wallet/collection/:address/mint',
+                path: '/manager/collection/:address/mint',
                 name: 'Mint NFT',
                 component: () => import('../pages/Mint.vue'),
                 beforeEnter: checkIfUserIsSignedIn
@@ -47,7 +47,7 @@ const routes = [
             {
                 path: '/signin',
                 name: 'Sign In',
-                component: () => import('../pages/WalletSignin.vue'),
+                component: () => import('../pages/SignIn.vue'),
             },
             {
                 path: '/:pathMatch(.*)',
