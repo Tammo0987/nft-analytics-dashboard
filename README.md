@@ -1,6 +1,6 @@
 # NFT Dashboard
 
-<img src="/home/tammo/Documents/nft-analytics-dashboard/frontend/src/assets/logo.svg" width="64" height="64">
+<img src="./frontend/src/assets/logo.svg" width="64" height="64">
 
 NFT Dashboard is a website to watch the nft market, create your own nft collections and mint them and display your nfts from your wallet.
 
