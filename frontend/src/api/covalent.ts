@@ -31,6 +31,7 @@ export interface NFTMetadata {
     name: string,
     description: string,
     owner: string
+    externalUrl?: string
 }
 
 function mapItemToCollection(item: any): Collection {
@@ -153,9 +154,7 @@ export async function loadNFTMetadata(chain: number, address: string, tokenId: T
     }
 }
 
-
-// NFTs which the user owns
-export async function getNFTsByAddress(chain: number, address: string): Promise<any> {
+export async function getNFTsByAddress(chain: number, address: string): Promise<NFTMetadata[]> {
     const match = {
         type: 'nft',
         balance: {
@@ -172,5 +171,15 @@ export async function getNFTsByAddress(chain: number, address: string): Promise<
 
     const response = await client.get(`/${chain}/address/${address}/balances_v2/`, requestConfig);
 
-    return response.data.data.items;
+    return response.data.data.items.map((item: any) => {
+        const nft = item.nft_data[0];
+        return {
+            tokenId: nft.token_id,
+            imageUrl: nft.external_data.image_256,
+            name: nft.external_data.name,
+            description: nft.external_data.description,
+            owner: nft.owner,
+            externalUrl: nft.external_data.external_url
+        }
+    });
 }

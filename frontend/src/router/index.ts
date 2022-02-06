@@ -45,6 +45,12 @@ const routes = [
                 beforeEnter: checkIfUserIsSignedIn
             },
             {
+                path: '/wallet',
+                name: 'Wallet',
+                component: () => import('../pages/Wallet.vue'),
+                beforeEnter: checkIfUserIsSignedIn,
+            },
+            {
                 path: '/signin',
                 name: 'Sign In',
                 component: () => import('../pages/SignIn.vue'),

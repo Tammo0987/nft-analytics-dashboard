@@ -32,5 +32,3 @@ export const useLoggedInNetworkChainId = async () => {
     const {chainId} = await useWeb3Provider().getNetwork();
     return chainId;
 };
-
-export const zeroAddress = '0x0000000000000000000000000000000000000000';

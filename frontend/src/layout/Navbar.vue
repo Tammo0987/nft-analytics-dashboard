@@ -24,6 +24,10 @@ export default defineComponent({
         label: 'NFT Manager',
         link: '/manager'
       },
+      {
+        label: 'NFT Wallet',
+        link: '/wallet'
+      }
     ]);
     return {
       navItems
