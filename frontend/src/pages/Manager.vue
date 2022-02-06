@@ -25,7 +25,7 @@
         </thead>
         <tbody class="divide-y divide-gray-900">
         <tr v-for="collection in collections" :key="collection.address" @click=""
-            class="odd:bg-gray-800 hover:bg-gray-600 even:bg-gray-700 cursor-pointer">
+            class="odd:bg-gray-800 even:bg-gray-700">
           <td class="px-6 py-4">
             <div class="text-sm text-white">{{ collection.name }}</div>
           </td>

@@ -1,19 +1,19 @@
 import {createRouter, createWebHistory} from "vue-router";
 import DashboardLayout from '../layout/DashboardLayout.vue';
-import Dashboard from '../pages/Dashboard.vue';
+import Market from '../pages/Market.vue';
 import NoRoute from '../layout/NoRoute.vue';
 import checkIfUserIsSignedIn from "./signin-guard";
 
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/market',
         component: DashboardLayout,
         children: [
             {
-                path: '/dashboard',
-                name: 'Dashboard',
-                component: Dashboard
+                path: '/market',
+                name: 'Market',
+                component: Market
             },
             {
                 path: '/collection/:chainId/:address',

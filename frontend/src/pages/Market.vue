@@ -15,15 +15,19 @@
 
 <script lang="ts">
 import {defineComponent, Ref, ref} from "vue";
-import CollectionTable from "../components/CollectionTable.vue";
 import Dropdown from "../components/Dropdown.vue";
 import {Collection, getCollections} from "../api/covalent";
 import Spinner from "../components/Spinner.vue";
 import useChainStore, {Chain, chains} from "../store/chain-store";
+import CollectionTable from "../components/CollectionTable.vue";
 
 export default defineComponent({
-  name: "Dashboard",
-  components: {Spinner, CollectionTable, Dropdown},
+  name: "Market",
+  components: {
+    Spinner,
+    Dropdown,
+    CollectionTable,
+  },
   setup() {
     const chainStore = useChainStore();
     const selectedChain = ref(chainStore.selectedChain);
