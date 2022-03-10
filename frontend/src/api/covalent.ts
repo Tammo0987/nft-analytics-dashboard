@@ -34,6 +34,11 @@ export interface NFTMetadata {
     externalUrl?: string
 }
 
+export interface TransactionCount {
+    date: string,
+    count: number
+}
+
 function mapItemToCollection(item: any): Collection {
     return {
         name: item.collection_name,
@@ -180,6 +185,58 @@ export async function getNFTsByAddress(chain: number, address: string): Promise<
             description: nft.external_data.description,
             owner: nft.owner,
             externalUrl: nft.external_data.external_url
+        }
+    });
+}
+
+export async function getTransactionByCollection(chain: number, address: string): Promise<TransactionCount[]> {
+    const match = {
+        successful: true,
+    };
+
+    const group = {
+        "_id": {
+            year: {
+                "$year": "block_signed_at"
+            },
+            month: {
+                "$month": "block_signed_at"
+            },
+            day: {
+                "$dayOfMonth": "block_signed_at"
+            }
+        },
+        count: {
+            "$sum": 1,
+        },
+        date: {
+            "$concat": "block_signed_at"
+        }
+    };
+
+    const sort = {
+        "block_signed_at": -1,
+    };
+
+    const today = getPastDay(0);
+    const monthAgo = getPastDay(30);
+
+    const requestConfig = {
+        params: {
+            match,
+            group,
+            sort,
+            from: monthAgo,
+            to: today
+        }
+    };
+
+    const response = await client.get(`/${chain}/address/${address}/transactions_v2/`, requestConfig);
+
+    return response.data.data.items.map((item: any) => {
+        return {
+            date: item.date,
+            count: item.count
         }
     });
 }

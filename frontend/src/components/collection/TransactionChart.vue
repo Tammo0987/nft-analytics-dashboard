@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-700 rounded shadow-lg p-4 relative">
-    <h3 class="text-white text-2xl text-bold">Floor Price</h3>
+    <h3 class="text-white text-2xl text-bold">Transactions</h3>
     <div v-if="loading" class="flex justify-center items-center absolute top-1/2 left-1/2">
       <spinner/>
     </div>
@@ -13,14 +13,13 @@ import {computed, defineComponent, ref} from "vue";
 import {LineChart} from "vue-chart-3";
 import {ChartOptions, registerables} from "chart.js";
 import Chart from 'chart.js/auto';
-import {useUSDFormat} from "../../composables";
-import {CollectionPrice, getCollectionHistoryData} from "../../api/covalent";
 import Spinner from "../Spinner.vue";
+import {getTransactionByCollection, TransactionCount} from "../../api/covalent";
 
 Chart.register(...registerables)
 
 export default defineComponent({
-  name: "FloorPriceChart",
+  name: "TransactionChart",
   components: {Spinner, LineChart},
   props: {
     chain: {
@@ -34,34 +33,21 @@ export default defineComponent({
   },
   setup: props => {
     const loading = ref(true);
-    const usdData = ref();
-    const weiData = ref();
+    const transactions = ref();
 
-    const mapPriceToChartData = (price: CollectionPrice) => {
+    const mapTransactionsToChartData = (transactions: TransactionCount) => {
       return {
-        usd: {
-          x: price.date,
-          y: price.floorPriceUSD
-        },
-        wei: {
-          x: price.date,
-          y: price.floorPriceWei / 10 ** 18
+        transactions: {
+          x: transactions.date.substring(0, 10),
+          y: transactions.count
         }
       }
-    }
+    };
 
     const options: ChartOptions = {
       color: 'rgb(229 231 235)',
       scales: {
-        A: {
-          position: 'left',
-          ticks: {
-            color: 'rgb(229 231 235)',
-            callback: value => useUSDFormat(Number(value)),
-          }
-        },
-        B: {
-          position: 'right',
+        y: {
           ticks: {
             color: 'rgb(229 231 235)',
           }
@@ -77,33 +63,29 @@ export default defineComponent({
     const chartData = computed(() => ({
       datasets: [
         {
-          label: 'Floor Price Quote 30 Days USD ($)',
-          data: usdData.value,
+          label: 'Transactions 30 Days',
+          data: transactions.value,
           borderColor: '#7b3fe4',
           tension: 0.25,
-          yAxisID: 'A'
-        },
-        {
-          label: 'Floor Price ETH 30 Days',
-          data: weiData.value,
-          borderColor: '#00d8d5',
-          tension: 0.25,
-          yAxisID: 'B'
+          yAxisID: 'y'
         }
-      ],
+      ]
     }));
 
-    getCollectionHistoryData(props.chain, props.address)
-        .then(prices => prices.map(mapPriceToChartData).reverse())
-        .then(prices => {
-              usdData.value = prices.map(price => price.usd);
-              weiData.value = prices.map(price => price.wei);
+    getTransactionByCollection(props.chain, props.address)
+        .then(transactionCounts => transactionCounts.map(mapTransactionsToChartData).reverse())
+        .then(transactionCounts => {
+              transactions.value = transactionCounts.map(item => item.transactions);
               loading.value = false;
             }
         )
         .catch(error => console.error(error));
 
-    return {chartData, options, loading};
+    return {
+      loading,
+      chartData,
+      options
+    };
   }
 });
 </script>
